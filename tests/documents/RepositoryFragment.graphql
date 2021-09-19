@@ -1,0 +1,6 @@
+fragment RepositoryFragment on Repository {
+  name
+  owner {
+    login
+  }
+}
