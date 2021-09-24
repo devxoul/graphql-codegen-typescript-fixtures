@@ -132,7 +132,7 @@ export class FixturesVisitor extends BaseVisitor<
 
   private getTypeDefinition(name: string) {
     return this.config.typeDefinitionModule
-      ? `types.${name}`
+      ? `types.${this.convertName(name)}`
       : name
   }
 
