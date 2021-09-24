@@ -64,11 +64,15 @@ export class FixturesVisitor extends BaseVisitor<
     if (['Query', 'Mutation'].includes(node.name.value)) {
       return ''
     }
-    return this.generateObjectFixture(node)
+    return this.generateObjectFixture(node, {
+      typename: true,
+    })
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode) {
-    return this.generateObjectFixture(node)
+    return this.generateObjectFixture(node, {
+      typename: false,
+    })
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode): string {
@@ -89,19 +93,23 @@ export class FixturesVisitor extends BaseVisitor<
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
-    return this.generateObjectFixture(node)
+    return this.generateObjectFixture(node, {
+      typename: false,
+    })
   }
 
   DirectiveDefinition(): string | null {
     return null
   }
 
-  private generateObjectFixture(node: ObjectDefinitionNodeCompatible) {
+  private generateObjectFixture(node: ObjectDefinitionNodeCompatible, options: {
+    typename: boolean,
+  }) {
     const fields = node.fields ?? []
     return dedent`
       ${node.name.value}(): ${this.getTypeDefinition(node.name.value)} {
         const fixture: Partial<${this.getTypeDefinition(node.name.value)}> = {
-          __typename: '${node.name.value}',
+          ${options.typename ? `__typename: '${node.name.value}',` : ''}
         }
         ${fields.map(field => (`Object.defineProperties(fixture, {
           ${field.name.value}: {
