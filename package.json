@@ -1,6 +1,6 @@
 {
   "name": "@pocketlesson/graphql-codegen-typescript-fixtures",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A plugin for graphql-code-generator that generates TypeScript fixtures for testing.",
   "main": "./build/index.js",
   "repository": "https://github.com/pocketlesson/graphql-codegen-typescript-fixtures.git",
