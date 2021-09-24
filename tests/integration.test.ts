@@ -1,4 +1,5 @@
 import setup, { Fixture } from './setup'
+import { execAsync } from './utils'
 
 jest.setTimeout(10000)
 
@@ -92,4 +93,15 @@ describe('a fixture with immer', () => {
     expect(repository.isEmpty).toEqual(false)
     expect(repository.homepageUrl).toEqual('https://pocketlesson.com')
   })
+})
+
+it('typecheck', async () => {
+  let error: Error | undefined
+  try {
+    await execAsync('yarn tsc tests/generated/graphql-fixtures-for-typing.ts --noemit --skipLibCheck')
+    error = undefined
+  } catch (err) {
+    error = err
+  }
+  expect(error).toBeUndefined()
 })
