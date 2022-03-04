@@ -38,7 +38,7 @@ const getContent = (schema: GraphQLSchema, visitor: FixturesVisitor) => {
   const printedSchema = printSchema(schema)
   const astNode = parse(printedSchema)
 
-  const content = visit(astNode, { leave: visitor })
+  const content = visit(astNode, visitor)
     .definitions.filter(Boolean)
     .join('\n')
   return '  ' + content.split('\n').join('\n  ')
