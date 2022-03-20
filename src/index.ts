@@ -22,8 +22,7 @@ const getPrepend = (visitor: FixturesVisitor) => {
   const prepend: string[] = []
 
   if (visitor.config.immer) {
-    prepend.push(`import produce from 'immer'`)
-    prepend.push(`import { Produced } from 'immer/dist/internal'\n`)
+    prepend.push(`import produce, { Draft } from 'immer'`)
   }
 
   if (visitor.config.typeDefinitionModule) {
@@ -60,16 +59,13 @@ const getAppend = (visitor: FixturesVisitor) => {
 const getFixtureFunctionDefinition = (immer: boolean) => {
   const generics = filterTruthy([
     'Name extends keyof typeof fixtureMap',
-    'Fixture extends ReturnType<typeof fixtureMap[Name]>',
-    immer && 'ProduceReturn = void',
+    'Fixture = ReturnType<typeof fixtureMap[Name]>',
   ])
   const parameters = filterTruthy([
     'name: Name',
-    immer && 'recipe?: (draft: Fixture) => ProduceReturn',
+    immer && 'recipe?: (draft: Draft<Fixture>) => Draft<Fixture> | void,',
   ])
-  const returnType = immer
-    ? 'Fixture | Produced<Fixture, ProduceReturn>'
-    : 'Fixture'
+  const returnType = 'Fixture'
   const returnStatement = immer
     ? 'return recipe ? produce(fixture, recipe) : fixture'
     : 'return fixture'
@@ -80,7 +76,7 @@ const getFixtureFunctionDefinition = (immer: boolean) => {
     >(
       ${parameters.join(',\n      ')}
     ): ${returnType} => {
-      const fixture = fixtureMap[name]() as Fixture
+      const fixture: Fixture = fixtureMap[name]()
       ${returnStatement}
     }
   `

@@ -15,6 +15,11 @@ beforeAll(async () => {
   })
 })
 
+it('passes type checks', async () => {
+  await execAsync(`yarn tsc tests/generated/graphql-fixtures-for-typing.ts --noemit --skipLibCheck`)
+  await execAsync(`yarn tsc tests/generated/graphql-fixtures-for-typing-with-immer.ts --noemit --skipLibCheck`)
+})
+
 describe('Scalar', () => {
   describe('when the default value is not configured', () => {
     it('defaults to the empty object', async () => {
